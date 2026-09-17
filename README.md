@@ -33,4 +33,47 @@ The following tools and technologies were used in the course of this analysis:
 - Streamlit
 - Git & Github
 
-## 
+## Data Preparation
+
+The data from September 2025 to August 2026 was collated and combined into a single dataframe.
+
+Each ride has a unique Ride ID. Duplicate ride IDs were checked for and removed.
+
+Additional columns were created to show:
+- start and end times converted to datetime format
+- the month each ride took place
+- the day each ride took place
+- the hour of day each ride began
+- the total time of each ride in seconds - this was later converted to minutes for ease of readability.
+
+During a test viewing of a sample of the data in Excel, a number of classic bike rides were found to be 25 hours long. The end station name of all rides identified were listed as null values. Further investigation revealed that classic Cyclistic bikes must be left at a registered bike station at the end of a ride, as such these 25 hour rides were deemed anomalous, and classic bike rides with no listed end station name were filtered out of the dataframe.
+
+Months and days of the week were arranged in order.
+- This data collection began in September 2025, however the months were ordered in the standard January - December format for ease of trend visibility during visualisation.
+
+## Analysis
+
+Aiming to identify behavioural differences in casual users and annual Cyclistic members, this analysis explores several key questions:
+- How does usage vary throughout the week?
+    - Usage per day of the week
+    - Average ride time per day of the week
+- How does usage vary throughout the year?
+- Do casual users and members use Cyclistic at different times of day?
+- Does ride type preference vary between casual users and members?
+- Is there a difference in ride start location between target groups?
+    - What are the most popular ride start coordinates for casual users?
+- The total number of members and casual users was also investigated.
+
+To answer these key questions, a number of visualisations were created using Plotly.
+
+# Key Findings
+
+This analysis found a number of differences in casual user an member behaviour:
+
+- Casual usage peaks on Saturdays, while member usage remains consistant Monday to Friday, before dropping off on the weekend.
+- Casual users tend to favour longer rides. They inrease in length during weekends, while member rides remain constant in length.
+- Both groups peak in usage during the summer months, however casual usage experiences a sharp drom off while member usage decreases more gradually through Autumn.
+- Cyclistic members initiate rides at two peak times - 8am and 5pm, with a sharp drop off before, between and after these periods. Casual usage increases gradually throughout the day, before peaking at 5pm.
+- While there was no standout location where members initiated rides, casual usage was heavily weighted towards coastal tourist locations. The top 5 casual ride locations were all within the vicinity of popular parks in Chicago.
+- Cyclistic members slightly favour classic bikes, while casual users slightly favour electric bikes.
+- Members account for the majority of cyclistic rides.
