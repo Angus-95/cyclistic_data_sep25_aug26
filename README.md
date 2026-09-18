@@ -68,12 +68,15 @@ To answer these key questions, a number of visualisations were created using Plo
 
 # Key Findings
 
-This analysis found a number of differences in casual user an member behaviour:
+This analysis found a number of differences in casual user and member behaviour:
 
 - Casual usage peaks on Saturdays, while member usage remains consistant Monday to Friday, before dropping off on the weekend.
-- Casual users tend to favour longer rides. They inrease in length during weekends, while member rides remain constant in length.
+- Casual users tend to favour longer rides. They increase in length during weekends, while member rides remain constant in length.
 - Both groups peak in usage during the summer months, however casual usage experiences a sharp drom off while member usage decreases more gradually through Autumn.
 - Cyclistic members initiate rides at two peak times - 8am and 5pm, with a sharp drop off before, between and after these periods. Casual usage increases gradually throughout the day, before peaking at 5pm.
-- While there was no standout location where members initiated rides, casual usage was heavily weighted towards coastal tourist locations. The top 5 casual ride locations were all within the vicinity of popular parks in Chicago.
+- While there was no standout location where members initiated rides, there was increased usage in and around Chcago City Center. Casual usage was heavily weighted towards coastal tourist locations. The top 5 casual ride locations were all within the vicinity of popular parks in Chicago.
 - Cyclistic members slightly favour classic bikes, while casual users slightly favour electric bikes.
-- Members account for the majority of cyclistic rides.
+- Members account for the majority of Cyclistic rides.
+
+The key takeaway from these findings is that annual members use Cyclistic consistently, predominantly around the two traditional daily rush hour periods. This, plus the geographical data being spread around the city but weighted towards the city center hints at members using Cyclistic mainly as a convenient way to commute to and from their workplace.
+Conversely, Casual usage is more centered around longer rides in the afternoon/evening and on weekends. There is a particular focus on Chicago's coastal green spaces, suggesting that leisure and tourism may be the main driving factor for these users.
