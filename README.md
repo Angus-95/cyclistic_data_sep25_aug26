@@ -80,3 +80,10 @@ This analysis found a number of differences in casual user and member behaviour:
 
 The key takeaway from these findings is that annual members use Cyclistic consistently, predominantly around the two traditional daily rush hour periods. This, plus the geographical data being spread around the city but weighted towards the city center hints at members using Cyclistic mainly as a convenient way to commute to and from their workplace.
 Conversely, Casual usage is more centered around longer rides in the afternoon/evening and on weekends. There is a particular focus on Chicago's coastal green spaces, suggesting that leisure and tourism may be the main driving factor for these users.
+
+## Visualisations
+
+The visualisations created for this analysis are available as an interactive Streamlit dashboard at the link below:
+
+INSERT LINK HERE
+
