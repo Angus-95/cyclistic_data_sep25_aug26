@@ -95,8 +95,8 @@ INSERT LINK HERE
 
 Notable visualisations include maps showing the contrast between member and casual user ride starting locations.
 
-![Casual ride starting locations](cyclistic_casual_ride_locations)        ![Member ride starting locations](cyclistic_member_ride_locations)
+![Casual ride starting locations](cyclistic_casual_ride_locations.png)        ![Member ride starting locations](cyclistic_member_ride_locations.png)
 
 The contrast in ride usage per hour between the two groups is also a highlight.
 
-![Ride usage per hour by user type](cyclistic_rides_per_hour)
+![Ride usage per hour by user type](cyclistic_rides_per_hour.png)
