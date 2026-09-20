@@ -93,6 +93,8 @@ INSERT LINK HERE
 
 ![Graphs comparing Casual and Member behaviour.](cyclistic_dash_preview2.png)
 
+## Highlights
+
 Notable visualisations include maps showing the contrast between member and casual user ride starting locations.
 
 ![Casual ride starting locations](cyclistic_casual_ride_locations.png)        ![Member ride starting locations](cyclistic_member_ride_locations.png)
