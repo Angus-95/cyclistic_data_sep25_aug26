@@ -32,7 +32,6 @@ The following tools and technologies were used in the course of this analysis:
     - Plotly
 - Streamlit
 - Git & Github
-- Powerpoint
 
 ## Data Preparation
 
@@ -116,8 +115,6 @@ Based on the findings of this analysis, the following recommendations to shareho
 
 3. Physical Discount Codes.
    We should put physical QR code posters linking to membership discount codes at the stations most frequented by casual users. Casual users already use cyclistic products, so we should make becoming a member as simple as possible. Simply creating an opportunity will increase conversion rates.
-
-The presentation to be given to shareholders can be found here LINK
 
 ## Future Analysis
 
