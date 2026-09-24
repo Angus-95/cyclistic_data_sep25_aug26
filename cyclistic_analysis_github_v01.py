@@ -59,7 +59,7 @@ def read_data():
                 ]
             )
             
-    new_df = new_df.drop_duplicates(subset=["ride_id"])
+            new_df = new_df.drop_duplicates(subset=["ride_id"])
     
             all_months.append(new_df)
 
