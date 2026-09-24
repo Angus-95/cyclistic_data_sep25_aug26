@@ -68,7 +68,8 @@ def read_data():
     return pd.concat(all_months, ignore_index=True)
     
 df = read_data()
-
+st.write("✅ Data loaded")
+st.write(df.shape)
 # %%
 
 # Data cleaning and transformation.
@@ -96,6 +97,9 @@ day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
 df_cleaned['month'] = pd.Categorical(df_cleaned['month'], categories=month_order, ordered=True)
 df_cleaned['day_of_week'] = pd.Categorical(df_cleaned['day_of_week'], categories=day_order, ordered=True)
 # %%
+
+st.write("✅ Data cleaned")
+st.write(df_cleaned.shape)
 
 # Analysis Tables
 
@@ -126,6 +130,8 @@ df_cleaned["lng_bin"] = df_cleaned["start_lng"].round(4)
 
 geo_data = df_cleaned.groupby(["lat_bin", "lng_bin", "member_casual"]).size().unstack(fill_value = 0).reset_index()
 # %%
+st.write("✅ Analysis tables created")
+st.write("✅ Starting visualisations")
 
 # Visualizations
 
