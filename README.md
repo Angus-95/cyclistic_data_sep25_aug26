@@ -32,6 +32,7 @@ The following tools and technologies were used in the course of this analysis:
     - Plotly
 - Streamlit
 - Git & Github
+- Powerpoint
 
 ## Data Preparation
 
@@ -102,3 +103,33 @@ Notable visualisations include maps showing the contrast between member and casu
 The contrast in ride usage per hour between the two groups is also a highlight.
 
 ![Ride usage per hour by user type](images/cyclistic_rides_per_hour.png)
+
+# Recommendations
+
+Based on the findings of this analysis, the following recommendations to shareholders are made:
+
+1. Weekend discounts.
+   As casual usage peaks on Saturdays, offering a discount on ride fares for members on weekends can make membership more attractive to people looking to enjoy a ride at that time.
+
+2. Targeted Social Media Campaign.
+   There are a large amount of people using Cyclistic bikes to explore the green spaces around Chicago. We should create advertisements showcasing Chicago's tourist hotspots and how easy they are to access as a Cyclistic member.
+
+3. Physical Discount Codes.
+   We should put physical QR code posters linking to membership discount codes at the stations most frequented by casual users. Casual users already use cyclistic products, so we should make becoming a member as simple as possible. Simply creating an opportunity will increase conversion rates.
+
+The presentation to be given to shareholders can be found here LINK
+
+## Future Analysis
+
+Were Cyclistic a real company, and were I to have more time to work with a broader range of data, I would be interested in exploring unique user data. This analysis has already covered that there are twice as many member rides as casual user rides, however the dataset does not record individual user information, so it is impossible to know how many of these rides were by the same people. Of course, the obvious hypothesis is that annual members use Cyclistic much more regularly than casual users, however if I were able to identify casual users who use Cyclistic repeatedly, I could analyse how they are using the service. This would provide invaluable insights in how to increase membership conversion rates, as repeated users are surely much more likely to become members than one-off riders.
+
+## Challenges
+
+I conducted this Analysis as part of the Google Data Analysis capstone project on Coursera. As such, this is my first real foray into the world of data analysis, and completing the project created a number of interesting challenges for me to face. Minor issues such as days of the week and months being out of order in my visualisations, finding how to display data as percentages rather than total numbers, and setting the colour scheme of my scatter maps to something easily visible on the underlying chicago map were all interesting puzzles for me to solve.
+
+Of particular note was deciding how to display all my visualisations in a way that was easily accessible to others. I considered a number of options including creating summary tables to export for use with Tableau or PowerBI, but as I wanted to practice further with Python, I eventually settled on streamlit. I enjoyed experimenting with different display layouts and colours, and feel like the process has taught me a lot. However when uploading my code initially to github I quickly realised that as my original code read previously downloaded data directly from my PC, it would require a small rewrite to instead fetch the data directly from the website.
+
+## Conclusion
+
+This project aimed to explore the differences between casual users and annual members of Cyclistic bikes. It found a number of differences in when, how long, and where the two groups use cyclistic products, and used these insights to provide recommendations on how the company should move forward.
+This project was a very useful exercise in using Python to conduct data analysis. I feel like I have learned a lot during the process, and look forward to further developing my skills in future projects.
