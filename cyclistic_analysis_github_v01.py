@@ -58,7 +58,9 @@ def read_data():
                     "start_lng"
                 ]
             )
-
+            
+    new_df = new_df.drop_duplicates(subset=["ride_id"])
+    
             all_months.append(new_df)
 
     return pd.concat(all_months, ignore_index=True)
@@ -78,8 +80,6 @@ st.write(df.shape)
 # -------------------------
 
 st.write("Cleaning data...")
-
-df = df.drop_duplicates(subset=["ride_id"])
 
 st.write("✅ Duplicates removed")
 
