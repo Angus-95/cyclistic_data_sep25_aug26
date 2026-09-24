@@ -89,16 +89,16 @@ INSERT LINK HERE
 
 ## Preview
 
-![Interactive maps of Chicago showing ride start locations. Both Casual and Member data is available to view.](cyclistic_dash_preview1.png)
+![Interactive maps of Chicago showing ride start locations. Both Casual and Member data is available to view.](images/cyclistic_dash_preview1.png)
 
-![Graphs comparing Casual and Member behaviour.](cyclistic_dash_preview2.png)
+![Graphs comparing Casual and Member behaviour.](images/cyclistic_dash_preview2.png)
 
 ## Highlights
 
 Notable visualisations include maps showing the contrast between member and casual user ride starting locations.
 
-![Casual ride starting locations](cyclistic_casual_ride_locations.png)        ![Member ride starting locations](cyclistic_member_ride_locations.png)
+![Casual ride starting locations](images/cyclistic_casual_ride_locations.png)        ![Member ride starting locations](images/cyclistic_member_ride_locations.png)
 
 The contrast in ride usage per hour between the two groups is also a highlight.
 
-![Ride usage per hour by user type](cyclistic_rides_per_hour.png)
+![Ride usage per hour by user type](images/cyclistic_rides_per_hour.png)
