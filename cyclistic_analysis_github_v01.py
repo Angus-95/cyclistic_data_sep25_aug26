@@ -7,17 +7,32 @@ Created on Wed Aug 12 18:16:05 2026
 
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import requests
+from io import BytesIO
+from zipfile import ZipFile
 
-st.title("Divvy Dashboard Test")
+st.title("Divvy Data Test")
 
-st.write("Streamlit is working!")
-st.write("Pandas version:", pd.__version__)
+url = "https://divvy-tripdata.s3.amazonaws.com/202501-divvy-tripdata.zip"
 
-fig = px.bar(
-    x=["Classic", "Electric"],
-    y=[20, 80],
-    labels={"x": "Bike Type", "y": "Percentage"}
-)
+st.write("Downloading data...")
 
-st.plotly_chart(fig)
+response = requests.get(url)
+response.raise_for_status()
+
+st.write("Download successful!")
+
+with ZipFile(BytesIO(response.content)) as z:
+
+    csv_file = [
+        file for file in z.namelist()
+        if file.endswith(".csv")
+    ][0]
+
+    st.write("CSV found:", csv_file)
+
+    df = pd.read_csv(z.open(csv_file))
+
+st.write("Data loaded successfully!")
+st.write("Rows:", len(df))
+st.dataframe(df.head())
