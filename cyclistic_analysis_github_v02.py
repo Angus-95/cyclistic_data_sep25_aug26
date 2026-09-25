@@ -75,19 +75,19 @@ def read_data():
             # April 2026
            if "202604" in url:
 
-    april_30_ids = set(
-        new_df.loc[
-            new_df["started_at"].str.startswith("2026-04-30"),
-            "ride_id"
-        ]
-    )
+                april_30_ids = set(
+                new_df.loc[
+                    new_df["started_at"].str.startswith("2026-04-30"),
+                "ride_id"
+            ]
+        )
 
-    st.write(f"April complete — {len(april_30_ids)} boundary IDs found")
+            st.write(f"April complete — {len(april_30_ids)} boundary IDs found")
 
 
-elif "202605" in url:
+        elif "202605" in url:
 
-    before = len(new_df)
+            before = len(new_df)
 
     new_df = new_df[
         ~new_df["ride_id"].isin(april_30_ids)
