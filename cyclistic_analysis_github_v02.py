@@ -98,6 +98,24 @@ def read_data():
         #ride_id no longer needed, dropped for memory efficiency
         new_df.drop(columns="ride_id", inplace=True)
 
+    # Change column data types to categories for memory efficiency.
+
+    df_cleaned["rideable_type"] = (
+        df_cleaned["rideable_type"].astype("category")
+    )
+
+    df_cleaned["member_casual"] = (
+        df_cleaned["member_casual"].astype("category")
+    )
+
+    df_cleaned["day_of_week"] = (
+        df_cleaned["day_of_week"].astype("category")
+    )
+
+    df_cleaned["month"] = (
+        df_cleaned["month"].astype("category")
+    )
+
         all_months.append(new_df)
 
 #     st.write("About to concatenate...")
@@ -137,24 +155,6 @@ df_cleaned = df[(df["rideable_type"] != "classic_bike") | df["end_station_name"]
 
 df_cleaned.drop(columns = "end_station_name", inplace = True)
 del df
-
-# Change column data types to categories for memory efficiency.
-
-df_cleaned["rideable_type"] = (
-    df_cleaned["rideable_type"].astype("category")
-)
-
-df_cleaned["member_casual"] = (
-    df_cleaned["member_casual"].astype("category")
-)
-
-df_cleaned["day_of_week"] = (
-    df_cleaned["day_of_week"].astype("category")
-)
-
-df_cleaned["month"] = (
-    df_cleaned["month"].astype("category")
-)
 
 #st.write(f"Rows: {len(df_cleaned):,}")
 #st.write(
