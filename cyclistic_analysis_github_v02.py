@@ -96,6 +96,8 @@ def read_data():
             st.write(
                 f"May complete — removed {before - len(new_df)} duplicate rows"
             )
+        #ride_id no longer needed, dropped for memory efficiency
+        new_df.drop(columns="ride_id", inplace=True)
 
         all_months.append(new_df)
 
@@ -113,11 +115,7 @@ def read_data():
     return combined
 
 df = read_data()
-df.drop(columns="ride_id", inplace=True)
-st.write(
-        f"Memory usage after ride_id removal: "
-        f"{df.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
-    )
+
 # %%
 
 # Data cleaning and transformation.
