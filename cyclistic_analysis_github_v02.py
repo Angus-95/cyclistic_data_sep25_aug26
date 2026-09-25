@@ -137,6 +137,12 @@ df_cleaned = df[(df["rideable_type"] != "classic_bike") | df["end_station_name"]
 
 del df
 
+st.write(f"Rows: {len(df_cleaned):,}")
+st.write(
+    f"Memory usage: "
+    f"{df_cleaned.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
+)
+
 # Set day/month order
 
 month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -191,7 +197,7 @@ fig_total_rides = px.pie(
     names = "member_casual",
     color = "member_casual",
     color_discrete_map = color_map,
-    title = "Total Number of Rides per User Type",
+    title = "Share of Rides per User Type (%)",
     labels = {
         "casual": "Casual Users",
         "member": "Members"
