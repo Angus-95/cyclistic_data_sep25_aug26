@@ -128,7 +128,17 @@ df["month"] = df["started_at"].dt.month_name()
 df["start_hour"] = df["started_at"].dt.hour
 df["ride_length (seconds)"] = ((df["ended_at"] - df["started_at"]).dt.total_seconds()).round().astype(int)
 
-# Change data type to categories for memory efficiency.
+# Filter out classic bike users who have abandoned their bike at an invalid location.
+# These rides were automatically ended by Cyclistic after 25 hours and as such are unsuitable for analysis.
+
+df_cleaned = df[(df["rideable_type"] != "classic_bike") | df["end_station_name"].notna()].copy()
+
+# Original dataframe no longer required, delete for memory efficiency. end_station_name also no longer required.
+
+df_cleaned.drop(columns = "end_station_name", inplace = True)
+del df
+
+# Change column data types to categories for memory efficiency.
 
 df_cleaned["rideable_type"] = (
     df_cleaned["rideable_type"].astype("category")
@@ -145,16 +155,6 @@ df_cleaned["day_of_week"] = (
 df_cleaned["month"] = (
     df_cleaned["month"].astype("category")
 )
-
-# Filter out classic bike users who have abandoned their bike at an invalid location.
-# These rides were automatically ended by Cyclistic after 25 hours and as such are unsuitable for analysis.
-
-df_cleaned = df[(df["rideable_type"] != "classic_bike") | df["end_station_name"].notna()].copy()
-
-# Original dataframe no longer required, delete for memory efficiency. end_station_name also no longer required.
-
-df_cleaned.drop(columns = "end_station_name", inplace = True)
-del df
 
 st.write(f"Rows: {len(df_cleaned):,}")
 st.write(
