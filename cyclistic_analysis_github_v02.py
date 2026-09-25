@@ -156,11 +156,11 @@ df_cleaned["month"] = (
     df_cleaned["month"].astype("category")
 )
 
-st.write(f"Rows: {len(df_cleaned):,}")
-st.write(
-    f"Memory usage: "
-    f"{df_cleaned.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
-)
+#st.write(f"Rows: {len(df_cleaned):,}")
+#st.write(
+#    f"Memory usage: "
+#    f"{df_cleaned.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
+#)
 
 memory_usage = (
     df_cleaned.memory_usage(deep=True)
