@@ -152,10 +152,6 @@ df_cleaned["day_of_week"] = (
     df_cleaned["day_of_week"].astype("category")
 )
 
-df_cleaned["month"] = (
-    df_cleaned["month"].astype("category")
-)
-
 #st.write(f"Rows: {len(df_cleaned):,}")
 #st.write(
 #    f"Memory usage: "
