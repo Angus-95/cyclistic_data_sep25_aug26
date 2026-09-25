@@ -98,6 +98,8 @@ def read_data():
         #ride_id no longer needed, dropped for memory efficiency
         new_df.drop(columns="ride_id", inplace=True)
 
+     all_months.append(new_df)
+
 #     st.write("About to concatenate...")
 
     combined = pd.concat(all_months, ignore_index=True)
@@ -108,8 +110,6 @@ def read_data():
 #        f"Memory usage: "
 #        f"{combined.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
 #    )
-
-    all_months.append(new_df)
 
     return combined
 
