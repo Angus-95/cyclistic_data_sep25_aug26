@@ -43,20 +43,22 @@ def read_data():
 
     all_months = []
     previous_boundary_ids = set()
-    
+
     for url in data_urls:
-       response = requests.get(url)
-       response.raise_for_status()
 
-       with ZipFile(BytesIO(response.content)) as z:
+        response = requests.get(url, timeout=60)
+        response.raise_for_status()
 
-           csv_file = [
-               file for file in z.namelist()
-               if file.endswith(".csv")
-           ][0]
+        with ZipFile(BytesIO(response.content)) as z:
 
-           new_df = pd.read_csv(z.open(csv_file),
-                     usecols=[
+            csv_file = [
+                file for file in z.namelist()
+                if file.endswith(".csv")
+            ][0]
+
+            new_df = pd.read_csv(
+                z.open(csv_file),
+                usecols=[
                     "ride_id",
                     "rideable_type",
                     "started_at",
@@ -67,7 +69,7 @@ def read_data():
                     "start_lng"
                 ]
             )
-           
+
             # Convert started_at to datetime
             started_at = pd.to_datetime(new_df["started_at"])
             new_df["started_at"] = started_at
@@ -90,10 +92,12 @@ def read_data():
 
             # Save boundary IDs for next iteration
             previous_boundary_ids = current_boundary_ids
-           
-           all_months.append(new_df)
+
+            all_months.append(new_df)
+
     return pd.concat(all_months, ignore_index=True)
-    
+
+
 df = read_data()
 
 # %%
