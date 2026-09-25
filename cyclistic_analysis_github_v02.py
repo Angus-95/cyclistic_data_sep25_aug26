@@ -109,6 +109,8 @@ def read_data():
 #        f"{combined.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
 #    )
 
+    all_months.append(new_df)
+
     return combined
 
 df = read_data()
@@ -138,23 +140,21 @@ del df
 
  # Change column data types to categories for memory efficiency.
 
-    df["rideable_type"] = (
-        df_cleaned["rideable_type"].astype("category")
-    )
+df["rideable_type"] = (
+    df_cleaned["rideable_type"].astype("category")
+)
 
-    df_cleaned["member_casual"] = (
-        df_cleaned["member_casual"].astype("category")
-    )
+df_cleaned["member_casual"] = (
+    df_cleaned["member_casual"].astype("category")
+)
 
-    df_cleaned["day_of_week"] = (
-        df_cleaned["day_of_week"].astype("category")
-    )
+df_cleaned["day_of_week"] = (
+    df_cleaned["day_of_week"].astype("category")
+)
 
-    df_cleaned["month"] = (
-        df_cleaned["month"].astype("category")
-    )
-
-        all_months.append(new_df)
+df_cleaned["month"] = (
+    df_cleaned["month"].astype("category")
+)
 
 #st.write(f"Rows: {len(df_cleaned):,}")
 #st.write(
