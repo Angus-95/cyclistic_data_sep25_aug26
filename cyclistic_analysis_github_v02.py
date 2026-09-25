@@ -68,31 +68,34 @@ def read_data():
                     "start_lng"
                 ]
             )
+
+        st.write(f"Processing: {url}")
             
             # 35 duplicate IDs identified during debugging  - All start on April 30 and end on May 1.
             # April 2026
-            if "202604" in url:
+           if "202604" in url:
 
-                april_started = pd.to_datetime(new_df["started_at"])
+    april_30_ids = set(
+        new_df.loc[
+            new_df["started_at"].str.startswith("2026-04-30"),
+            "ride_id"
+        ]
+    )
 
-                april_30_ids = set(
-                    new_df.loc[
-                        april_started.dt.date
-                        == pd.Timestamp("2026-04-30").date(),
-                        "ride_id"
-                    ]
-                )
-                st.write("April Complete!")
-            
-            # May 2026
-            elif "202605" in url:
+    st.write(f"April complete — {len(april_30_ids)} boundary IDs found")
 
-                new_df = new_df[
-                    ~new_df["ride_id"].isin(april_30_ids)
-                ]
-                st.write("May Complete!")
 
-            all_months.append(new_df)
+elif "202605" in url:
+
+    before = len(new_df)
+
+    new_df = new_df[
+        ~new_df["ride_id"].isin(april_30_ids)
+    ]
+
+    st.write(
+        f"May complete — removed {before - len(new_df)} duplicate rows"
+    )
 
     return pd.concat(all_months, ignore_index=True)
 
@@ -104,7 +107,7 @@ df = read_data()
 
 # Add columns showing the month, day of the week, time of day and total time (in seconds) of each ride.
 
-#df["started_at"] = pd.to_datetime(df["started_at"]) - converted during data loading
+df["started_at"] = pd.to_datetime(df["started_at"])
 df["ended_at"] = pd.to_datetime(df["ended_at"])
 df["day_of_week"] = df["started_at"].dt.day_name()
 df["month"] = df["started_at"].dt.month_name()
