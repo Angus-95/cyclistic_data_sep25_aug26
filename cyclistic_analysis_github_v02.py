@@ -89,13 +89,13 @@ def read_data():
 
             before = len(new_df)
 
-    new_df = new_df[
-        ~new_df["ride_id"].isin(april_30_ids)
-    ]
+            new_df = new_df[
+                ~new_df["ride_id"].isin(april_30_ids)
+            ]
 
-    st.write(
-        f"May complete — removed {before - len(new_df)} duplicate rows"
-    )
+            st.write(
+                f"May complete — removed {before - len(new_df)} duplicate rows"
+            )
 
     return pd.concat(all_months, ignore_index=True)
 
