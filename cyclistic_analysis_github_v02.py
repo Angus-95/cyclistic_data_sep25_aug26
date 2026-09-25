@@ -38,7 +38,6 @@ data_urls = [
     "https://divvy-tripdata.s3.amazonaws.com/202608-divvy-tripdata.zip",
     ]
 
-@st.cache_data
 def read_data():
 
     all_months = []
