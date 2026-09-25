@@ -140,17 +140,21 @@ del df
 
  # Change column data types to categories for memory efficiency.
 
-df_cleaned["rideable_type"] = (
-    df_cleaned["rideable_type"].astype("category")
-)
+#df_cleaned["rideable_type"] = (
+#    df_cleaned["rideable_type"].astype("category")
+#)
 
-df_cleaned["member_casual"] = (
-    df_cleaned["member_casual"].astype("category")
-)
+#df_cleaned["member_casual"] = (
+#    df_cleaned["member_casual"].astype("category")
+#)
 
-df_cleaned["day_of_week"] = (
-    df_cleaned["day_of_week"].astype("category")
-)
+#df_cleaned["day_of_week"] = (
+#    df_cleaned["day_of_week"].astype("category")
+#)
+
+#df_cleaned["month"] = (
+#    df_cleaned["month"].astype("category")
+#)
 
 #st.write(f"Rows: {len(df_cleaned):,}")
 #st.write(
