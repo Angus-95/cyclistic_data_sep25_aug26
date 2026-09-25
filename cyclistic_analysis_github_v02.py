@@ -68,7 +68,7 @@ def read_data():
                 ]
             )
 
-        st.write(f"Processing: {url}")
+        # st.write(f"Processing: {url}")
             
             # 35 duplicate IDs identified during debugging  - All start on April 30 and end on May 1.
             # April 2026
@@ -92,24 +92,24 @@ def read_data():
                 ~new_df["ride_id"].isin(april_30_ids)
             ]
 
-            st.write(
-                f"May complete — removed {before - len(new_df)} duplicate rows"
-            )
+#            st.write(
+#                f"May complete — removed {before - len(new_df)} duplicate rows"
+#            )
         #ride_id no longer needed, dropped for memory efficiency
         new_df.drop(columns="ride_id", inplace=True)
 
         all_months.append(new_df)
 
-    st.write("About to concatenate...")
+#     st.write("About to concatenate...")
 
     combined = pd.concat(all_months, ignore_index=True)
 
-    st.write("Concatenation completed!")
-    st.write(f"Rows: {len(combined):,}")
-    st.write(
-        f"Memory usage: "
-        f"{combined.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
-    )
+#    st.write("Concatenation completed!")
+#    st.write(f"Rows: {len(combined):,}")
+#    st.write(
+#        f"Memory usage: "
+#        f"{combined.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
+#    )
 
     return combined
 
@@ -498,21 +498,21 @@ with map_col2:
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.subheader("Total number of rides")
-    st.plotly_chart(fig_total_rides, use_container_width=True)
+    st.subheader("Share of Rides by User Type")
+    st.plotly_chart(fig_total_rides, width = "stretch")
     st.subheader("Rides per Hour by User Type")
-    st.plotly_chart(fig_rides_by_hour, use_container_width=True)
+    st.plotly_chart(fig_rides_by_hour, width = "stretch")
     
 with col2:
     
     st.subheader("Rides by Day of the Week")
-    st.plotly_chart(fig_users_by_day, use_container_width=True)
+    st.plotly_chart(fig_users_by_day, width = "stretch")
     st.subheader("Rides per Month by User Type")
-    st.plotly_chart(fig_users_by_month, use_container_width=True)
+    st.plotly_chart(fig_users_by_month, width = "stretch")
     
 with col3:
     
     st.subheader("Average Ride Time")
-    st.plotly_chart(fig_ride_time_by_day, use_container_width=True)
+    st.plotly_chart(fig_ride_time_by_day, width = "stretch")
     st.subheader("Rides per Ride Type by User Type")
-    st.plotly_chart(fig_users_by_ridetype, use_container_width=True)
+    st.plotly_chart(fig_users_by_ridetype, width = "stretch")
