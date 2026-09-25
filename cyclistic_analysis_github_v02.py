@@ -73,12 +73,12 @@ def read_data():
             
             # 35 duplicate IDs identified during debugging  - All start on April 30 and end on May 1.
             # April 2026
-           if "202604" in url:
+        if "202604" in url:
 
-                april_30_ids = set(
-                new_df.loc[
-                    new_df["started_at"].str.startswith("2026-04-30"),
-                "ride_id"
+            april_30_ids = set(
+            new_df.loc[
+            new_df["started_at"].str.startswith("2026-04-30"),
+              "ride_id"
             ]
         )
 
