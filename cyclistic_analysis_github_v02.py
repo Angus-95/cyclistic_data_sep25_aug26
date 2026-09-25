@@ -143,6 +143,15 @@ st.write(
     f"{df_cleaned.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
 )
 
+memory_usage = (
+    df_cleaned.memory_usage(deep=True)
+    .sort_values(ascending=False)
+)
+
+st.write(
+    (memory_usage / 1024**2).round(1)
+)
+
 # Set day/month order
 
 month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
