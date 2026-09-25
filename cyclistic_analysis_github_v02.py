@@ -98,7 +98,7 @@ def read_data():
         #ride_id no longer needed, dropped for memory efficiency
         new_df.drop(columns="ride_id", inplace=True)
 
-     all_months.append(new_df)
+    all_months.append(new_df)
 
 #     st.write("About to concatenate...")
 
