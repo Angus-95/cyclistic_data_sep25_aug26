@@ -140,7 +140,7 @@ del df
 
  # Change column data types to categories for memory efficiency.
 
-df["rideable_type"] = (
+df_cleaned["rideable_type"] = (
     df_cleaned["rideable_type"].astype("category")
 )
 
