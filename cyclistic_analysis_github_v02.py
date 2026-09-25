@@ -133,8 +133,9 @@ df["ride_length (seconds)"] = ((df["ended_at"] - df["started_at"]).dt.total_seco
 
 df_cleaned = df[(df["rideable_type"] != "classic_bike") | df["end_station_name"].notna()].copy()
 
-# Original dataframe no longer required, delete for memory efficiency
+# Original dataframe no longer required, delete for memory efficiency. end_station_name also no longer required.
 
+df_cleaned = df_cleaned.drop(columns = "end_station_name", inplace = True)
 del df
 
 st.write(f"Rows: {len(df_cleaned):,}")
