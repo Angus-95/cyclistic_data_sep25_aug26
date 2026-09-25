@@ -97,6 +97,8 @@ def read_data():
                 f"May complete — removed {before - len(new_df)} duplicate rows"
             )
 
+        all_months.append(new_df)
+
     return pd.concat(all_months, ignore_index=True)
 
 df = read_data()
