@@ -128,6 +128,24 @@ df["month"] = df["started_at"].dt.month_name()
 df["start_hour"] = df["started_at"].dt.hour
 df["ride_length (seconds)"] = ((df["ended_at"] - df["started_at"]).dt.total_seconds()).round().astype(int)
 
+# Change data type to categories for memory efficiency.
+
+df_cleaned["rideable_type"] = (
+    df_cleaned["rideable_type"].astype("category")
+)
+
+df_cleaned["member_casual"] = (
+    df_cleaned["member_casual"].astype("category")
+)
+
+df_cleaned["day_of_week"] = (
+    df_cleaned["day_of_week"].astype("category")
+)
+
+df_cleaned["month"] = (
+    df_cleaned["month"].astype("category")
+)
+
 # Filter out classic bike users who have abandoned their bike at an invalid location.
 # These rides were automatically ended by Cyclistic after 25 hours and as such are unsuitable for analysis.
 
