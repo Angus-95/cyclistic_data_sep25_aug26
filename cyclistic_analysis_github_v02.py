@@ -68,25 +68,28 @@ def read_data():
                 ]
             )
            
-           # Identify and remove ride IDs that appear in the previous month.
-           
-           if previous_boundary_ids:
+            # Convert started_at to datetime
+            started_at = pd.to_datetime(new_df["started_at"])
+            new_df["started_at"] = started_at
+
+            # Identify rides starting on the final day of the current dataset
+            last_day = started_at.dt.date.max()
+
+            current_boundary_ids = set(
+                new_df.loc[
+                    started_at.dt.date == last_day,
+                    "ride_id"
+                ]
+            )
+
+            # Remove rides that appeared in the previous dataset
+            if previous_boundary_ids:
                 new_df = new_df[
                     ~new_df["ride_id"].isin(previous_boundary_ids)
                 ]
-                
-            # Identify rides that appear in previous months
-            
-                started_at = pd.to_datetime(new_df["started_at"])
 
-           last_day = started_at.dt.date.max()
-
-           previous_boundary_ids = set(
-               new_df.loc[
-                   started_at.dt.date == last_day,
-                   "ride_id"
-               ]
-           )
+            # Save boundary IDs for next iteration
+            previous_boundary_ids = current_boundary_ids
            
            all_months.append(new_df)
     return pd.concat(all_months, ignore_index=True)
