@@ -81,7 +81,7 @@ def read_data():
             ]
         )
 
-            st.write(f"April complete — {len(april_30_ids)} boundary IDs found")
+#            st.write(f"April complete — {len(april_30_ids)} boundary IDs found")
 
 
         elif "202605" in url:
