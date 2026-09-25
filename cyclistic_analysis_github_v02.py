@@ -113,7 +113,11 @@ def read_data():
     return combined
 
 df = read_data()
-
+df.drop(columns="ride_id", inplace=True)
+st.write(
+        f"Memory usage after ride_id removal: "
+        f"{df.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
+    )
 # %%
 
 # Data cleaning and transformation.
