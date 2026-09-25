@@ -101,6 +101,8 @@ def read_data():
 
     return pd.concat(all_months, ignore_index=True)
 
+    st.write("Dataframe loaded successfully")
+
 df = read_data()
 
 # %%
