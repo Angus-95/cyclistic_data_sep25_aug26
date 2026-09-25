@@ -82,7 +82,7 @@ def read_data():
                         "ride_id"
                     ]
                 )
-            st.write("April Complete!")
+                st.write("April Complete!")
             
             # May 2026
             elif "202605" in url:
@@ -90,7 +90,7 @@ def read_data():
                 new_df = new_df[
                     ~new_df["ride_id"].isin(april_30_ids)
                 ]
-            st.write("May Complete!")
+                st.write("May Complete!")
 
             all_months.append(new_df)
 
