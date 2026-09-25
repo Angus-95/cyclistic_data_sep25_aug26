@@ -99,9 +99,18 @@ def read_data():
 
         all_months.append(new_df)
 
-    return pd.concat(all_months, ignore_index=True)
+    st.write("About to concatenate...")
 
-    st.write("Dataframe loaded successfully")
+    combined = pd.concat(all_months, ignore_index=True)
+
+    st.write("Concatenation completed!")
+    st.write(f"Rows: {len(combined):,}")
+    st.write(
+        f"Memory usage: "
+        f"{combined.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
+    )
+
+return combined
 
 df = read_data()
 
