@@ -42,7 +42,6 @@ data_urls = [
 def read_data():
 
     all_months = []
-    previous_boundary_ids = set()
 
     for url in data_urls:
 
@@ -69,34 +68,31 @@ def read_data():
                     "start_lng"
                 ]
             )
+            
+            # 35 duplicate IDs identified during debugging  - All start on April 30 and end on May 1.
+            # April 2026
+            if "202604" in url:
 
-            # Convert started_at to datetime
-            started_at = pd.to_datetime(new_df["started_at"])
-            new_df["started_at"] = started_at
+                april_started = pd.to_datetime(new_df["started_at"])
 
-            # Identify rides starting on the final day of the current dataset
-            last_day = started_at.dt.date.max()
+                april_30_ids = set(
+                    new_df.loc[
+                        april_started.dt.date
+                        == pd.Timestamp("2026-04-30").date(),
+                        "ride_id"
+                    ]
+                )
 
-            current_boundary_ids = set(
-                new_df.loc[
-                    started_at.dt.date == last_day,
-                    "ride_id"
-                ]
-            )
+            # May 2026
+            elif "202605" in url:
 
-            # Remove rides that appeared in the previous dataset
-            if previous_boundary_ids:
                 new_df = new_df[
-                    ~new_df["ride_id"].isin(previous_boundary_ids)
+                    ~new_df["ride_id"].isin(april_30_ids)
                 ]
-
-            # Save boundary IDs for next iteration
-            previous_boundary_ids = current_boundary_ids
 
             all_months.append(new_df)
 
     return pd.concat(all_months, ignore_index=True)
-
 
 df = read_data()
 
