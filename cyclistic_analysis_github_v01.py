@@ -123,6 +123,10 @@ df["ride_length (seconds)"] = ((df["ended_at"] - df["started_at"]).dt.total_seco
 
 df_cleaned = df[(df["rideable_type"] != "classic_bike") | df["end_station_name"].notna()].copy()
 
+#Delete original dataframe after cleaning for memory efficiency.
+
+del df
+
 # Set day/month order
 
 month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
