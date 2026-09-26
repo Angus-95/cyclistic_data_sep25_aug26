@@ -127,6 +127,12 @@ df_cleaned = df[(df["rideable_type"] != "classic_bike") | df["end_station_name"]
 
 del df
 
+# change dtypes for memory efficiency.
+
+df_cleaned["member_casual"] = (
+   df_cleaned["member_casual"].astype("category")
+)
+
 # Set day/month order
 
 month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
