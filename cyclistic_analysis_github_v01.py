@@ -67,21 +67,16 @@ def read_data():
                     "start_lat",
                     "start_lng"
                 ]                )
-        # st.write(f"Processing: {url}")
-            
-            # 35 duplicate IDs identified during debugging  - All start on April 30 and end on May 1.
-            # April 2026
+
+        # 35 duplicate IDs identified during debugging  - All start on April 30 and end on May 1.
         if "202604" in url:
 
             april_30_ids = set(
-            new_df.loc[
-            new_df["started_at"].str.startswith("2026-04-30"),
-              "ride_id"
-            ]
-        )
-
-#            st.write(f"April complete — {len(april_30_ids)} boundary IDs found")
-
+                new_df.loc[
+                new_df["started_at"].str.startswith("2026-04-30"),
+                "ride_id"
+                ]
+            )
 
         elif "202605" in url:
 
