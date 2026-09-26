@@ -36,28 +36,30 @@ data_urls = [
     "https://divvy-tripdata.s3.amazonaws.com/202606-divvy-tripdata.zip",
     "https://divvy-tripdata.s3.amazonaws.com/202607-divvy-tripdata.zip",
     "https://divvy-tripdata.s3.amazonaws.com/202608-divvy-tripdata.zip",
-    ]
+]
+
 
 # @st.cache_data        -- Cache removed for memory efficiency
+
 def read_data():
 
     all_months = []
 
     for url in data_urls:
-       response = requests.get(url)
-       response.raise_for_status()
+        response = requests.get(url)
+        response.raise_for_status()
 
-       with ZipFile(BytesIO(response.content)) as z:
+        with ZipFile(BytesIO(response.content)) as z:
 
-           csv_file = [
-               file for file in z.namelist()
-               if file.endswith(".csv")
-           ][0]
+            csv_file = [
+                file for file in z.namelist()
+                if file.endswith(".csv")
+            ][0]
 
-           # Only include columns used in analysis
-           new_df = pd.read_csv(
-               z.open(csv_file),
-               usecols=[
+            # Only include columns used in analysis
+            new_df = pd.read_csv(
+                z.open(csv_file),
+                usecols=[
                     "ride_id",
                     "rideable_type",
                     "started_at",
@@ -66,15 +68,17 @@ def read_data():
                     "member_casual",
                     "start_lat",
                     "start_lng"
-                ]                )
+                ]
+            )
 
-        # 35 duplicate IDs identified during debugging  - All start on April 30 and end on May 1.
+        # 35 duplicate IDs identified during debugging -
+        # All start on April 30 and end on May 1.
         if "202604" in url:
 
             april_30_ids = set(
                 new_df.loc[
-                new_df["started_at"].str.startswith("2026-04-30"),
-                "ride_id"
+                    new_df["started_at"].str.startswith("2026-04-30"),
+                    "ride_id"
                 ]
             )
 
@@ -86,14 +90,15 @@ def read_data():
                 ~new_df["ride_id"].isin(april_30_ids)
             ]
 
-#            st.write(
-#                f"May complete — removed {before - len(new_df)} duplicate rows"
-#            )
-        #ride_id no longer needed, dropped for memory efficiency
+            # st.write(
+            #     f"May complete — removed {before - len(new_df)} duplicate rows"
+            # )
+
+        # ride_id no longer needed, dropped for memory efficiency
         new_df.drop(columns="ride_id", inplace=True)
-        
+
         all_months.append(new_df)
-        
+
     return pd.concat(all_months, ignore_index=True)
     
 df = read_data()
