@@ -38,7 +38,7 @@ data_urls = [
     "https://divvy-tripdata.s3.amazonaws.com/202608-divvy-tripdata.zip",
     ]
 
-@st.cache_data
+# @st.cache_data        -- Cache removed for memory efficiency
 def read_data():
 
     all_months = []
@@ -54,8 +54,51 @@ def read_data():
                if file.endswith(".csv")
            ][0]
 
-           new_df = pd.read_csv(z.open(csv_file))
-           all_months.append(new_df)
+           # Only include columns used in analysis
+           new_df = pd.read_csv(
+               z.open(csv_file),
+               usecols=[
+                    "ride_id",
+                    "rideable_type",
+                    "started_at",
+                    "ended_at",
+                    "end_station_name",
+                    "member_casual",
+                    "start_lat",
+                    "start_lng"
+                ]                )
+        # st.write(f"Processing: {url}")
+            
+            # 35 duplicate IDs identified during debugging  - All start on April 30 and end on May 1.
+            # April 2026
+        if "202604" in url:
+
+            april_30_ids = set(
+            new_df.loc[
+            new_df["started_at"].str.startswith("2026-04-30"),
+              "ride_id"
+            ]
+        )
+
+#            st.write(f"April complete — {len(april_30_ids)} boundary IDs found")
+
+
+        elif "202605" in url:
+
+            before = len(new_df)
+
+            new_df = new_df[
+                ~new_df["ride_id"].isin(april_30_ids)
+            ]
+
+#            st.write(
+#                f"May complete — removed {before - len(new_df)} duplicate rows"
+#            )
+        #ride_id no longer needed, dropped for memory efficiency
+        new_df.drop(columns="ride_id", inplace=True)
+        
+        all_months.append(new_df)
+        
     return pd.concat(all_months, ignore_index=True)
     
 df = read_data()
