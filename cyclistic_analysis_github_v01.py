@@ -107,7 +107,7 @@ df = read_data()
 
 # Data cleaning and transformation.
 
-df = df.drop_duplicates(subset = ["ride_id"])
+# df = df.drop_duplicates(subset = ["ride_id"])    -- Removed for memory efficiency as all 35 identified duplicate rides removed when loading data.
 
 # Add columns showing the month, day of the week, time of day and total time (in seconds) of each ride.
 
