@@ -141,6 +141,16 @@ df_cleaned['month'] = pd.Categorical(df_cleaned['month'], categories=month_order
 df_cleaned['day_of_week'] = pd.Categorical(df_cleaned['day_of_week'], categories=day_order, ordered=True)
 
 st.write(
+    f"Memory usage: "
+    f"{df_cleaned.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
+)
+
+memory_usage = (
+    df_cleaned.memory_usage(deep=True)
+    .sort_values(ascending=False)
+)
+
+st.write(
     (memory_usage / 1024**2).round(1)
 )
 
