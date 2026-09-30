@@ -502,18 +502,26 @@ color_map = {
 # Total number of rides per user type.
 
 fig_total_rides = px.pie(
-    df_cleaned,
-    names = "member_casual",
-    color = "member_casual",
-    color_discrete_map = color_map,
-    title = "Total Number of Rides per User Type",
-    labels = {
+    total_rides,
+    names="member_casual",
+    values="rides",
+    color="member_casual",
+    color_discrete_map=color_map,
+    title="Total Number of Rides per User Type",
+    labels={
         "casual": "Casual Users",
-        "member": "Members"
-        },
-    )
+        "member": "Members",
+        "rides": "Total Trips"
+    },
+)
 
-fig_total_rides.update_traces(hovertemplate="<b>User Type:</b> %{label}<br><b>Total Trips:</b> %{value}<br><b>Share:</b> %{percent}")
+fig_total_rides.update_traces(
+    hovertemplate=(
+        "<b>User Type:</b> %{label}<br>"
+        "<b>Total Trips:</b> %{value}<br>"
+        "<b>Share:</b> %{percent}"
+    )
+)
 
 # Numbers of rides per day of the week by user type.
 
