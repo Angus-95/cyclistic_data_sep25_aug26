@@ -188,19 +188,19 @@ df_cleaned.drop(columns = ["start_lat", "start_lng"], inplace = True)
 
 geo_data = df_cleaned.groupby(["lat_bin", "lng_bin", "member_casual"]).size().unstack(fill_value = 0).reset_index()
 
-st.write(
-    f"Memory usage: "
-    f"{df_cleaned.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
-)
+#st.write(
+#    f"Memory usage: "
+#    f"{df_cleaned.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
+#)
 
-memory_usage = (
-    df_cleaned.memory_usage(deep=True)
-    .sort_values(ascending=False)
-)
+#memory_usage = (
+#    df_cleaned.memory_usage(deep=True)
+#    .sort_values(ascending=False)
+#)
 
-st.write(
-    (memory_usage / 1024**2).round(1)
-)
+#st.write(
+#    (memory_usage / 1024**2).round(1)
+#)
 
 # Visualizations
 
