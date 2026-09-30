@@ -133,6 +133,10 @@ df_cleaned["member_casual"] = (
    df_cleaned["member_casual"].astype("category")
 )
 
+df_cleaned["rideable_type"] = (
+   df_cleaned["rideable_type"].astype("category")
+)
+
 # Set day/month order - months kept in traditional order over chronological for ease of visibility during visualisation.
 
 month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
