@@ -19,8 +19,6 @@ from zipfile import ZipFile
 
 st.set_page_config(layout="wide")
 
-#%%
-
 # Read monthly csv files and combine into one dataframe.
 
 data_urls = [
@@ -103,8 +101,6 @@ def read_data():
     
 df = read_data()
 
-# %%
-
 # Data cleaning and transformation.
 
 # df = df.drop_duplicates(subset = ["ride_id"])    -- Removed for memory efficiency as all 35 identified duplicate rides removed when loading data.
@@ -145,19 +141,19 @@ day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
 df_cleaned['month'] = pd.Categorical(df_cleaned['month'], categories=month_order, ordered=True)
 df_cleaned['day_of_week'] = pd.Categorical(df_cleaned['day_of_week'], categories=day_order, ordered=True)
 
-st.write(
-    f"Memory usage: "
-    f"{df_cleaned.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
-)
+#st.write(
+#    f"Memory usage: "
+#    f"{df_cleaned.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
+#)
 
-memory_usage = (
-    df_cleaned.memory_usage(deep=True)
-    .sort_values(ascending=False)
-)
+#memory_usage = (
+#    df_cleaned.memory_usage(deep=True)
+#    .sort_values(ascending=False)
+#)
 
-st.write(
-    (memory_usage / 1024**2).round(1)
-)
+#st.write(
+#    (memory_usage / 1024**2).round(1)
+#)
 
 # Analysis Tables
 
@@ -316,8 +312,6 @@ fig_users_by_ridetype = px.bar(
 
 fig_users_by_ridetype.update_traces(hovertemplate = "Percentage of Users: %{y:.1f}%<extra></extra>")
 
-# %%
-
 #Overlay geographic ride data over a map of Chicago
 
 max_rides = max(
@@ -437,8 +431,6 @@ chicago_map.update_layout(
     }
 )
 
-# %%
-
 #Create a second map to isolate the most popular casual ride points of origin.
 
 top5_map = go.Figure()
@@ -488,8 +480,6 @@ top5_map.update_layout(
         b=0
     )
 )
-
-# %%
 
 ## Create interactive dashboard in Streamlit
 
