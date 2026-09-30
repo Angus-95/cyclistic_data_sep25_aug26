@@ -37,7 +37,7 @@ data_urls = [
 ]
 
 
-# @st.cache_data        -- Cache removed for memory efficiency
+ @st.cache_data
 
 def read_data():
 
