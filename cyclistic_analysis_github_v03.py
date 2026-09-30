@@ -19,7 +19,6 @@ from zipfile import ZipFile
 st.set_page_config(layout="wide")
 
 # Read monthly csv files and combine into one dataframe.
-
 data_urls = [
     "https://divvy-tripdata.s3.amazonaws.com/202509-divvy-tripdata.zip",
     "https://divvy-tripdata.s3.amazonaws.com/202510-divvy-tripdata.zip",
@@ -36,12 +35,28 @@ data_urls = [
 ]
 
 
-@st.cache_data
-def read_data():
+def create_analysis_tables():
+    
+    # Running totals for the summary tables
+    hourly_totals = {}
+    daily_totals = {}
+    monthly_totals = {}
+    ridetype_totals = {}
 
-    all_months = []
+    # For average ride length we need total seconds AND ride count.
+    # We combine these across months at the end so the final
+    # average is correctly weighted by number of rides.
+    ride_time_totals = {}
+
+    # Geographic totals
+    geo_totals = {}
+
+    # The 35 duplicate rides identified in the original code.
+    # April IDs are retained only until May has been processed.
+    april_30_ids = set()
 
     for url in data_urls:
+
         response = requests.get(url)
         response.raise_for_status()
 
@@ -52,7 +67,7 @@ def read_data():
                 if file.endswith(".csv")
             ][0]
 
-            # Only include columns used in analysis
+            # Only load columns actually required for analysis.
             new_df = pd.read_csv(
                 z.open(csv_file),
                 usecols=[
@@ -67,8 +82,7 @@ def read_data():
                 ]
             )
 
-        # 35 duplicate IDs identified during debugging -
-        # All start on April 30 and end on May 1.
+        # Remove the known April/May duplicate rides
         if "202604" in url:
 
             april_30_ids = set(
@@ -80,109 +94,387 @@ def read_data():
 
         elif "202605" in url:
 
-            before = len(new_df)
-
             new_df = new_df[
                 ~new_df["ride_id"].isin(april_30_ids)
-            ]
+            ].copy()
 
-            # st.write(
-            #     f"May complete — removed {before - len(new_df)} duplicate rows"
-            # )
+        # Data cleaning
 
-        # ride_id no longer needed, dropped for memory efficiency
-        new_df.drop(columns="ride_id", inplace=True)
+        new_df["started_at"] = pd.to_datetime(new_df["started_at"])
+        new_df["ended_at"] = pd.to_datetime(new_df["ended_at"])
 
-        all_months.append(new_df)
+        # Filter out classic bike rides that were automatically
+        # ended after 25 hours because the bike was abandoned.
+        new_df = new_df[
+            (new_df["rideable_type"] != "classic_bike")
+            | new_df["end_station_name"].notna()
+        ].copy()
 
-    return pd.concat(all_months, ignore_index=True)
+        # end_station_name is no longer required.
+        new_df.drop(
+            columns="end_station_name",
+            inplace=True
+        )
 
-st.write("Concatenation complete")
+        # Add analysis columns.
+        new_df["day_of_week"] = new_df["started_at"].dt.day_name()
+        new_df["month"] = new_df["started_at"].dt.month_name()
+        new_df["start_hour"] = new_df["started_at"].dt.hour
+
+        new_df["ride_length (seconds)"] = (
+            (new_df["ended_at"] - new_df["started_at"])
+            .dt.total_seconds()
+            .round()
+            .astype("int32")
+        )
+
+        # Convert repeated string values to categorical.
+        new_df["member_casual"] = (
+            new_df["member_casual"].astype("category")
+        )
+
+        new_df["rideable_type"] = (
+            new_df["rideable_type"].astype("category")
+        )
+
+        # Set month/day order
+
+        month_order = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ]
+
+        day_order = [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+        ]
+
+        new_df["month"] = pd.Categorical(
+            new_df["month"],
+            categories=month_order,
+            ordered=True
+        )
+
+        new_df["day_of_week"] = pd.Categorical(
+            new_df["day_of_week"],
+            categories=day_order,
+            ordered=True
+        )
+
+        # Users by hour
+
+        monthly_hourly = (
+            new_df
+            .groupby(
+                ["start_hour", "member_casual"],
+                observed=True
+            )
+            .size()
+        )
+
+        for key, value in monthly_hourly.items():
+            hourly_totals[key] = (
+                hourly_totals.get(key, 0) + value
+            )
+
+        # Users by day
+
+        monthly_daily = (
+            new_df
+            .groupby(
+                ["day_of_week", "member_casual"],
+                observed=True
+            )
+            .size()
+        )
+
+        for key, value in monthly_daily.items():
+            daily_totals[key] = (
+                daily_totals.get(key, 0) + value
+            )
+
+
+        # Users by month
+
+        monthly_monthly = (
+            new_df
+            .groupby(
+                ["month", "member_casual"],
+                observed=True
+            )
+            .size()
+        )
+
+        for key, value in monthly_monthly.items():
+            monthly_totals[key] = (
+                monthly_totals.get(key, 0) + value
+            )
+
+
+        # Users by ride type
+
+        monthly_ridetype = (
+            new_df
+            .groupby(
+                ["rideable_type", "member_casual"],
+                observed=True
+            )
+            .size()
+        )
+
+        for key, value in monthly_ridetype.items():
+            ridetype_totals[key] = (
+                ridetype_totals.get(key, 0) + value
+            )
+
+
+        # Average ride length
+        #
+        # Store SUM and COUNT rather than monthly averages.
+        # This means the final average is correctly weighted.
+        #
+
+        monthly_ride_time = (
+            new_df
+            .groupby(
+                ["day_of_week", "member_casual"],
+                observed=True
+            )["ride_length (seconds)"]
+            .agg(["sum", "count"])
+        )
+
+        for key, row in monthly_ride_time.iterrows():
+
+            if key not in ride_time_totals:
+                ride_time_totals[key] = {
+                    "sum": 0,
+                    "count": 0
+                }
+
+            ride_time_totals[key]["sum"] += row["sum"]
+            ride_time_totals[key]["count"] += row["count"]
+
+
+        # Geographic data
+
+        new_df["lat_bin"] = new_df["start_lat"].round(4)
+        new_df["lng_bin"] = new_df["start_lng"].round(4)
+
+        monthly_geo = (
+            new_df
+            .groupby(
+                [
+                    "lat_bin",
+                    "lng_bin",
+                    "member_casual"
+                ],
+                observed=True
+            )
+            .size()
+        )
+
+        for key, value in monthly_geo.items():
+            geo_totals[key] = (
+                geo_totals.get(key, 0) + value
+            )
+
+
+        # IMPORTANT:
+        # The monthly dataframe is no longer needed.
+
+
+        del new_df
+        del response
+
+
+    # Convert running totals into the exact tables expected by
+    # the existing visualisation code.
+
+    # Users by hour
     
-df = read_data()
+    users_by_hour = (
+        pd.Series(hourly_totals, name="count")
+        .rename_axis(
+            ["start_hour", "member_casual"]
+        )
+        .unstack(fill_value=0)
+    )
 
-# Data cleaning and transformation.
+    users_by_hour = users_by_hour.reindex(
+        columns=["casual", "member"],
+        fill_value=0
+    )
 
-# df = df.drop_duplicates(subset = ["ride_id"])    -- Removed for memory efficiency as all 35 identified duplicate rides removed when loading data.
 
-# Add columns showing the month, day of the week, time of day and total time (in seconds) of each ride.
+    # Users by day
 
-df["started_at"] = pd.to_datetime(df["started_at"])
-df["ended_at"] = pd.to_datetime(df["ended_at"])
-df["day_of_week"] = df["started_at"].dt.day_name()
-df["month"] = df["started_at"].dt.month_name()
-df["start_hour"] = df["started_at"].dt.hour
-df["ride_length (seconds)"] = ((df["ended_at"] - df["started_at"]).dt.total_seconds()).round().astype(int)
+    users_by_day = (
+        pd.Series(daily_totals, name="count")
+        .rename_axis(
+            ["day_of_week", "member_casual"]
+        )
+        .unstack(fill_value=0)
+    )
 
-# Filter out classic bike users who have abandoned their bike at an invalid location.
-# These rides were automatically ended by Cyclistic after 25 hours and as such are unsuitable for analysis.
+    users_by_day = users_by_day.reindex(
+        index=day_order
+    )
 
-df_cleaned = df[(df["rideable_type"] != "classic_bike") | df["end_station_name"].notna()].copy()
+    users_by_day = users_by_day.reindex(
+        columns=["casual", "member"],
+        fill_value=0
+    )
 
-#Delete original dataframe, end_station_name after cleaning for memory efficiency.
 
-df_cleaned.drop(columns = "end_station_name", inplace = True)
-del df
+    # Users by month
 
-# change dtypes for memory efficiency.
+    users_by_month = (
+        pd.Series(monthly_totals, name="count")
+        .rename_axis(
+            ["month", "member_casual"]
+        )
+        .unstack(fill_value=0)
+    )
 
-df_cleaned["member_casual"] = (
-   df_cleaned["member_casual"].astype("category")
-)
+    users_by_month = users_by_month.reindex(
+        index=month_order
+    )
 
-df_cleaned["rideable_type"] = (
-   df_cleaned["rideable_type"].astype("category")
-)
+    users_by_month = users_by_month.reindex(
+        columns=["casual", "member"],
+        fill_value=0
+    )
 
-# Set day/month order - months kept in traditional order over chronological for ease of visibility during visualisation.
 
-month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-df_cleaned['month'] = pd.Categorical(df_cleaned['month'], categories=month_order, ordered=True)
-df_cleaned['day_of_week'] = pd.Categorical(df_cleaned['day_of_week'], categories=day_order, ordered=True)
+    # Users by ride type
 
-#st.write(
-#    f"Memory usage: "
-#    f"{df_cleaned.memory_usage(deep=True).sum() / 1024**3:.2f} GB"
-#)
+    users_by_ridetype = (
+        pd.Series(ridetype_totals, name="count")
+        .rename_axis(
+            ["rideable_type", "member_casual"]
+        )
+        .unstack(fill_value=0)
+    )
 
-#memory_usage = (
-#    df_cleaned.memory_usage(deep=True)
-#    .sort_values(ascending=False)
-#)
+    users_by_ridetype = users_by_ridetype.reindex(
+        columns=["casual", "member"],
+        fill_value=0
+    )
 
-#st.write(
-#    (memory_usage / 1024**2).round(1)
-#)
+    users_by_ridetype["casual_pct"] = (
+        users_by_ridetype["casual"]
+        / users_by_ridetype["casual"].sum()
+        * 100
+    )
 
-# Analysis Tables
+    users_by_ridetype["member_pct"] = (
+        users_by_ridetype["member"]
+        / users_by_ridetype["member"].sum()
+        * 100
+    )
 
-# Create summary tables to analyse usage rates of casual users and members based on the month and day of the week of each ride.
 
-users_by_hour = df_cleaned.groupby(["start_hour", "member_casual"]).size().unstack()
-users_by_day = df_cleaned.groupby(["day_of_week", "member_casual"]).size().unstack()
-users_by_month = df_cleaned.groupby(["month", "member_casual"]).size().unstack()
+    # Average ride time
 
-# Create Summary table to analyse users by ride type. To be expressed as a percentage.
+    avg_seconds_data = {}
 
-users_by_ridetype = df_cleaned.groupby(["rideable_type", "member_casual"]).size().unstack()
-users_by_ridetype["casual_pct"] = users_by_ridetype["casual"]/users_by_ridetype["casual"].sum() * 100
-users_by_ridetype["member_pct"] = users_by_ridetype["member"]/users_by_ridetype["member"].sum() * 100
-# Change ride time from seconds to minutes for readability
+    for key, values in ride_time_totals.items():
 
-avg_seconds = df_cleaned.groupby(["day_of_week", "member_casual"])["ride_length (seconds)"].mean().unstack()
-avg_minutes = avg_seconds / 60
+        avg_seconds_data[key] = (
+            values["sum"] / values["count"]
+        )
 
-#Group rides based on where the ride originated, latitude and longitude rounded to 4 decimal places
+    avg_seconds = (
+        pd.Series(avg_seconds_data, name="average_seconds")
+        .rename_axis(
+            ["day_of_week", "member_casual"]
+        )
+        .unstack()
+    )
 
-df_cleaned["lat_bin"] = df_cleaned["start_lat"].round(4)
-df_cleaned["lng_bin"] = df_cleaned["start_lng"].round(4)
+    avg_seconds = avg_seconds.reindex(
+        index=day_order
+    )
 
-# start_lat, start_lng no longer used - removed for memory efficiency
+    avg_seconds = avg_seconds.reindex(
+        columns=["casual", "member"]
+    )
 
-df_cleaned.drop(columns = ["start_lat", "start_lng"], inplace = True)
+    avg_minutes = avg_seconds / 60
 
-geo_data = df_cleaned.groupby(["lat_bin", "lng_bin", "member_casual"]).size().unstack(fill_value = 0).reset_index()
+
+    # Geographic data
+
+    geo_data = (
+        pd.Series(geo_totals, name="count")
+        .rename_axis(
+            ["lat_bin", "lng_bin", "member_casual"]
+        )
+        .unstack(fill_value=0)
+        .reset_index()
+    )
+
+    geo_data = geo_data.reindex(
+        columns=[
+            "lat_bin",
+            "lng_bin",
+            "casual",
+            "member"
+        ],
+        fill_value=0
+    )
+
+
+
+    # Total rides
+
+    total_rides = pd.DataFrame({
+        "member_casual": ["casual", "member"],
+        "rides": [
+            users_by_hour["casual"].sum(),
+            users_by_hour["member"].sum()
+        ]
+    })
+
+
+    return (
+        users_by_hour,
+        users_by_day,
+        users_by_month,
+        users_by_ridetype,
+        avg_minutes,
+        geo_data,
+        total_rides
+    )
+
+
+# Run the processing
+(
+    users_by_hour,
+    users_by_day,
+    users_by_month,
+    users_by_ridetype,
+    avg_minutes,
+    geo_data,
+    total_rides
+) = create_analysis_tables()
+
+st.write("Data processing complete")
 
 #st.write(
 #    f"Memory usage: "
@@ -241,8 +533,6 @@ fig_users_by_day = px.bar(
 
 fig_users_by_day.update_traces(hovertemplate = "No. of rides: %{y}<extra></extra>")
 
-del users_by_day
-
 # Number of rides per month by user type
 
 fig_users_by_month = px.bar(
@@ -260,8 +550,6 @@ fig_users_by_month = px.bar(
 )
 
 fig_users_by_month.update_traces(hovertemplate = "No. of rides: %{y}<extra></extra>")
-
-del users_by_month
 
 #Length of ride per day of the week by user type.
 
@@ -281,7 +569,6 @@ fig_ride_time_by_day = px.bar(
 
 fig_ride_time_by_day.update_traces(hovertemplate = "Ride length: %{y:.2f} mins<extra></extra>")
 
-del avg_minutes
 
 fig_rides_by_hour = px.line(
     users_by_hour.reset_index(),
@@ -309,7 +596,6 @@ fig_rides_by_hour.update_layout(hovermode = "x unified",
         )
     )
 
-del users_by_hour
 
 # Number of rides per ride type by user type
 
@@ -333,7 +619,6 @@ fig_users_by_ridetype = px.bar(
 
 fig_users_by_ridetype.update_traces(hovertemplate = "Percentage of Users: %{y:.1f}%<extra></extra>")
 
-del users_by_ridetype
 
 #Overlay geographic ride data over a map of Chicago
 
@@ -503,9 +788,6 @@ top5_map.update_layout(
         b=0
     )
 )
-
-del geo_data
-del df_cleaned
 
 ## Create interactive dashboard in Streamlit
 
