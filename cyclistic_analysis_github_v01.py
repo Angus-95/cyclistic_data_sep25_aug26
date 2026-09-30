@@ -133,13 +133,16 @@ df_cleaned["member_casual"] = (
    df_cleaned["member_casual"].astype("category")
 )
 
-# Set day/month order
+# Set day/month order - months kept in traditional order over chronological for ease of visibility during visualisation.
 
 month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 df_cleaned['month'] = pd.Categorical(df_cleaned['month'], categories=month_order, ordered=True)
 df_cleaned['day_of_week'] = pd.Categorical(df_cleaned['day_of_week'], categories=day_order, ordered=True)
-# %%
+
+st.write(
+    (memory_usage / 1024**2).round(1)
+)
 
 # Analysis Tables
 
