@@ -182,6 +182,10 @@ avg_minutes = avg_seconds / 60
 df_cleaned["lat_bin"] = df_cleaned["start_lat"].round(4)
 df_cleaned["lng_bin"] = df_cleaned["start_lng"].round(4)
 
+# start_lat, start_lng no longer used - removed for memory efficiency
+
+df_cleaned.drop(columns = ("start_lat", "start_lng"), inplace = True)
+
 geo_data = df_cleaned.groupby(["lat_bin", "lng_bin", "member_casual"]).size().unstack(fill_value = 0).reset_index()
 
 st.write(
