@@ -11,7 +11,6 @@ import pandas as pd
 import streamlit as st
 import plotly.io as pio
 import plotly.express as px
-pio.renderers.default = 'browser'
 import plotly.graph_objects as go
 import requests
 from io import BytesIO
@@ -37,8 +36,7 @@ data_urls = [
 ]
 
 
-# @st.cache_data
-
+@st.cache_data
 def read_data():
 
     all_months = []
