@@ -98,6 +98,8 @@ def read_data():
         all_months.append(new_df)
 
     return pd.concat(all_months, ignore_index=True)
+
+st.write("Concatenation complete")
     
 df = read_data()
 
