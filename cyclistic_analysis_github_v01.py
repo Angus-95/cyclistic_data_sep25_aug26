@@ -159,10 +159,6 @@ df_cleaned['day_of_week'] = pd.Categorical(df_cleaned['day_of_week'], categories
 
 # Analysis Tables
 
-# Create summary table to count total number of member and casual rides.
-
-total_rides = df_cleaned["member_casual"].value_counts()
-
 # Create summary tables to analyse usage rates of casual users and members based on the month and day of the week of each ride.
 
 users_by_hour = df_cleaned.groupby(["start_hour", "member_casual"]).size().unstack()
@@ -247,6 +243,8 @@ fig_users_by_day = px.bar(
 
 fig_users_by_day.update_traces(hovertemplate = "No. of rides: %{y}<extra></extra>")
 
+del users_by_day
+
 # Number of rides per month by user type
 
 fig_users_by_month = px.bar(
@@ -265,6 +263,8 @@ fig_users_by_month = px.bar(
 
 fig_users_by_month.update_traces(hovertemplate = "No. of rides: %{y}<extra></extra>")
 
+del users_by_month
+
 #Length of ride per day of the week by user type.
 
 fig_ride_time_by_day = px.bar(
@@ -282,6 +282,8 @@ fig_ride_time_by_day = px.bar(
 )
 
 fig_ride_time_by_day.update_traces(hovertemplate = "Ride length: %{y:.2f} mins<extra></extra>")
+
+del avg_minutes
 
 fig_rides_by_hour = px.line(
     users_by_hour.reset_index(),
@@ -309,6 +311,8 @@ fig_rides_by_hour.update_layout(hovermode = "x unified",
         )
     )
 
+del users_by_hour
+
 # Number of rides per ride type by user type
 
 fig_users_by_ridetype = px.bar(
@@ -330,6 +334,8 @@ fig_users_by_ridetype = px.bar(
     )
 
 fig_users_by_ridetype.update_traces(hovertemplate = "Percentage of Users: %{y:.1f}%<extra></extra>")
+
+del users_by_ridetype
 
 #Overlay geographic ride data over a map of Chicago
 
@@ -499,6 +505,9 @@ top5_map.update_layout(
         b=0
     )
 )
+
+del geo_data
+del df_cleaned
 
 ## Create interactive dashboard in Streamlit
 
