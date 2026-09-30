@@ -37,7 +37,7 @@ data_urls = [
 ]
 
 
- @st.cache_data
+@st.cache_data
 
 def read_data():
 
